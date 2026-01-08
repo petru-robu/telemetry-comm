@@ -1,1 +1,14 @@
-.idea
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Object files
+*.o
+
+# Targets
+client/client
+daemon/daemon
+
+# Static libs 
+*.a
