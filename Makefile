@@ -1,29 +1,23 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -O2 -g
-LIBNAME = libtle.a
+# Builds every module
 
-# Foldere surse
-DAEMON_DIR = daemon
-LIB_DIR    = libtle
+.PHONY: all common libtle daemon client clean
 
-# Surse
-DAEMON_SRC = $(DAEMON_DIR)/main.c $(DAEMON_DIR)/server.c
-LIB_SRC    = $(LIB_DIR)/tle.c
+all: common libtle daemon client
 
-# Obiecte
-DAEMON_OBJ = $(DAEMON_SRC:.c=.o)
-LIB_OBJ    = $(LIB_SRC:.c=.o)
+common:
+	$(MAKE) -C common
 
-# Targeturi implicite
-all: daemon $(LIBNAME)
+libtle:
+	$(MAKE) -C libtle
 
-# Daemon
-daemon: $(DAEMON_OBJ)
-	$(CC) $(CFLAGS) -o $@ $^
+daemon: common libtle
+	$(MAKE) -C daemon
 
-# Biblioteca statica
-$(LIBNAME): $(LIB_OBJ)
-	ar rcs $@ $^
+client: common libtle
+	$(MAKE) -C client
 
 clean:
-	rm -f daemon $(LIBNAME) $(DAEMON_OBJ) $(LIB_OBJ)
+	$(MAKE) -C common clean
+	$(MAKE) -C libtle clean
+	$(MAKE) -C daemon clean
+	$(MAKE) -C client clean
