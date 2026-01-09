@@ -1,6 +1,9 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+// Socket file path
+#define SOCKET_PATH "/tmp/pubsub_daemon.sock"
+
 // Message limits
 #define MAX_CHANNEL 128
 #define MAX_MSG 256
@@ -18,7 +21,7 @@ enum msg_type
     MSG_DELIVER
 };
 
-struct tle_msg
+struct tlm_msg
 {
     enum msg_type type;
     int client_flags;

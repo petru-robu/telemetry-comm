@@ -2,11 +2,7 @@ CC := gcc
 
 CFLAGS := -Wall -Wextra \
           -Iinc \
-          -I../common/inc \
-          -I../libtle/inc
-
-# link the static libraries
-LDFLAGS := ../common/libcommon.a ../libtle/libtle.a
+		  -I../common/inc
 
 SRC := $(wildcard src/*.c)
 OBJ := $(SRC:.c=.o)
@@ -15,7 +11,7 @@ BIN := daemon
 all: $(BIN)
 
 $(BIN): $(OBJ)
-	$(CC) $^ $(LDFLAGS) -o $@
+	$(CC) $^ -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

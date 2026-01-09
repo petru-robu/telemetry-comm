@@ -148,7 +148,7 @@ void remove_subscriber(int fd)
 }
 
 /* Recursively broadcast a message to all subscribers of this node and its children */
-void broadcast_recursive(ChannelNode *node, struct tle_msg *msg)
+void broadcast_recursive(ChannelNode *node, struct tlm_msg *msg)
 {
     if (!node || !msg)
         return;
@@ -159,7 +159,7 @@ void broadcast_recursive(ChannelNode *node, struct tle_msg *msg)
         if (client_fd < 0)
             continue;
 
-        struct tle_msg out_msg = *msg;
+        struct tlm_msg out_msg = *msg;
         out_msg.type = MSG_DELIVER;
 
         if (write(client_fd, &out_msg, sizeof(out_msg)) < 0)

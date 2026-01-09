@@ -5,7 +5,7 @@ ARFLAGS := rcs
 
 SRC := $(wildcard src/*.c)
 OBJ := $(SRC:.c=.o)
-LIB := libcommon.a
+LIB := libtlm.a
 
 all: $(LIB)
 

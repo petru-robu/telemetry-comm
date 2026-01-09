@@ -32,9 +32,9 @@ For this example, the following statements are correct:
 # Project Structure
 
 The projects consists of three components:
-- Userspace daemon
-- API
-- Client application
+- daemon (Server)
+- libtlm (API that exposes the server's functionality)
+- application (links libtlm and communicates with the daemon)
 
 Each module is compiled separately via makefiles.
 
@@ -43,12 +43,8 @@ Octav docs here
 ### Channel Tree
 
 ### Server API
+docs here
 
-## API
-api docs
-
-## Client
-client docs
 
 # Running instructions
 
@@ -60,9 +56,6 @@ make
 # build daemon
 make daemon 
 
-# build client
-make client
-
 # etc
 ```
 
@@ -70,8 +63,5 @@ Running:
 ```bash
 # run demon
 ./daemon/daemon
-
-# run client
-./client/client
 
 ```

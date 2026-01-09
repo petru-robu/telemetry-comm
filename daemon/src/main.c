@@ -3,6 +3,7 @@
 
 int main(void)
 {
+    // start the daemon
     if (server_init(SOCKET_PATH) < 0)
         return EXIT_FAILURE;
 

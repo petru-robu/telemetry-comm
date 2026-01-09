@@ -98,7 +98,7 @@ static void handle_new_connection(void)
 static void handle_client_message(int index)
 {
     int sd = client_sockets[index];
-    struct tle_msg msg;
+    struct tlm_msg msg;
 
     int valread = read(sd, &msg, sizeof(msg));
 

@@ -1,7 +1,7 @@
 ﻿#ifndef TREE_H
 #define TREE_H
 
-#include "../../common/inc/message.h"  // for tle_msg
+#include "../../common/protocol.h"   // for tlm_msg
 
 // Limits
 #define MAX_CHILDREN 10
@@ -54,6 +54,6 @@ void remove_subscriber(int fd);
 /**
  * Broadcast a message recursively to this node and all child nodes.
  */
-void broadcast_recursive(ChannelNode *node, struct tle_msg *msg);
+void broadcast_recursive(ChannelNode *node, struct tlm_msg *msg);
 
 #endif // TREE_H

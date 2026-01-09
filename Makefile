@@ -1,23 +1,19 @@
 # Builds every module
 
-.PHONY: all common libtle daemon client clean
+.PHONY: all libtlm daemon application clean
 
-all: common libtle daemon client
+all: libtlm daemon application
 
-common:
-	$(MAKE) -C common
+libtlm:
+	$(MAKE) -C libtlm
 
-libtle:
-	$(MAKE) -C libtle
-
-daemon: common libtle
+daemon:
 	$(MAKE) -C daemon
 
-client: common libtle
-	$(MAKE) -C client
-
+application:
+	$(MAKE) -C application
+	
 clean:
-	$(MAKE) -C common clean
-	$(MAKE) -C libtle clean
+	$(MAKE) -C libtlm clean
 	$(MAKE) -C daemon clean
-	$(MAKE) -C client clean
+	$(MAKE) -C application clean
