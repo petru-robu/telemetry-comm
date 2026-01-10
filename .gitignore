@@ -7,8 +7,8 @@ out/
 *.o
 
 # Targets
-client/client
 daemon/daemon
+application/bin/*
 
 # Static libs 
 *.a

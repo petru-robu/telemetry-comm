@@ -1,18 +1,19 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include "../../libtlm/inc/tlm.h"
 
 int main(void)
 {
-    tlm_t pub = tlm_open(TLM_PUBLISHER, "/comm");
+    tlm_t pub = tlm_open(TLM_PUBLISHER, "/comm/messaging");
 
     for (int i = 1; i <= 5; i++)
     {
         char msg[64];
-        snprintf(msg, sizeof(msg), "Hello #%d", i);
+        snprintf(msg, sizeof(msg), "[P2] Hello #%d", i);
         tlm_post(pub, msg);
-        printf("Sent: %s\n", msg);
-        sleep(1);
+        printf("[P1] Sent: %s\n", msg);
+        sleep(3);
     }
 
     tlm_close(pub);

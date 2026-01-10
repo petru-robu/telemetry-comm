@@ -3,30 +3,24 @@
 
 #include "../../common/protocol.h" // for message structure
 
-typedef struct tlm_handle * tlm_t;
+typedef struct tlm_handle* tlm_t;
 
-/* open a publisher / subscriber / both on a channel */
+// subscribe a participant to a channel (open a handle)
 tlm_t tlm_open(int type, const char *channel_name);
 
-/* register a real-time callback */
-int tlm_callback(
-    tlm_t token,
-    void (*message_callback)(tlm_t token, const char *message)
-);
+// register a callback 
+int tlm_callback(tlm_t handle, void (*message_callback)(tlm_t handle, const char *message));
 
-/* read last received message (polling) */
-const char * tlm_read(
-    tlm_t token,
-    unsigned int *message_id
-);
+// read last received message for polling applications
+const char * tlm_read(tlm_t handle, unsigned int *message_id);
 
-/* post a message on the associated channel */
-int tlm_post(tlm_t token, const char *message);
+// post a message on the channel the connection is subscribed to
+int tlm_post(tlm_t handle, const char *message);
 
-/* close the participant */
+// close the connection
 void tlm_close(tlm_t token);
 
-/* return participant type */
+// return the type of connection (publisher / subscriber / both)
 int tlm_type(tlm_t token);
 
 

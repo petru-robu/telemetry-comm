@@ -69,17 +69,17 @@ static void *rx_loop(void *arg)
         handle->msg_id++;
         handle->has_msg = 1;
 
-        if (handle->callback)
+        if (handle->callback) // call the callback function
             handle->callback(handle, msg.payload);
     }
 
     return NULL;
 }
 
-// subscribe a participant to a channel
+/* ------------- PUBLIC API ---------------*/
 tlm_t tlm_open(int type, const char *channel_name)
 {   
-    // new handle for the new connection
+    // new handle for the new connection 
     tlm_t handle = calloc(1, sizeof(*handle));
 
     if (!handle)
@@ -102,6 +102,8 @@ tlm_t tlm_open(int type, const char *channel_name)
     };
     strncpy(msg.channel, channel_name, MAX_CHANNEL - 1);
 
+    
+    // try writing subscrition message
     if (write(handle->sock, &msg, sizeof(msg)) <= 0)
     {
         close(handle->sock);
@@ -114,45 +116,53 @@ tlm_t tlm_open(int type, const char *channel_name)
 
 // post a message to a channel
 int tlm_post(tlm_t handle, const char *message)
-{
+{   
+    // for publisher only
     if (!handle || !(handle->type & TLM_PUBLISHER))
         return -1;
 
+    // prepare message
     struct tlm_msg msg = {
         .type = MSG_PUBLISH,
         .client_flags = handle->type
     };
-
     strncpy(msg.channel, handle->channel, MAX_CHANNEL- 1);
     strncpy(msg.payload, message, MAX_MSG - 1);
 
-    return write(handle->sock, &msg, sizeof(msg)) > 0 ? 0 : -1;
+
+    // try writing on the socket
+    if(write(handle->sock, &msg, sizeof(msg)) > 0)
+        return 0;
+    else
+        return -1;
 }
 
 // register a callback on a connection
 int tlm_callback(tlm_t handle, void (*message_callback)(tlm_t, const char *))
 {
+    // no handle or no callback function given
     if (!handle || !message_callback)
         return -1;
 
     handle->callback = message_callback;
     handle->rx_running = 1;
 
-    // create a new thread and running from rx_loop
+    // create a new thread and run from rx_loop
     return pthread_create(&handle->rx_thread, NULL, rx_loop, handle);
 }
 
 // get last message sent
-const char * tlm_read(tlm_t h, unsigned int *message_id)
+const char * tlm_read(tlm_t handle, unsigned int *message_id)
 {
-    if (!h || !h->has_msg)
+    if (!handle || !handle->has_msg)
         return NULL;
-    h->has_msg = 0;
 
+    // get the last message id
+    handle->has_msg = 0;
     if (message_id)
-        *message_id = h->msg_id;
+        *message_id = handle->msg_id;
 
-    return h->last_msg;
+    return handle->last_msg;
 }
 
 // close connection
@@ -161,8 +171,8 @@ void tlm_close(tlm_t handle)
     if (!handle)
         return;
 
+    // stop the thread for callback
     handle->rx_running = 0;
-
     if (handle->callback)
         pthread_join(handle->rx_thread, NULL);
 
@@ -172,6 +182,7 @@ void tlm_close(tlm_t handle)
 
 int tlm_type(tlm_t handle)
 {
+    // return handle type
     if(handle)
         return handle->type;
     else

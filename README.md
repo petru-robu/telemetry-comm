@@ -65,3 +65,20 @@ Running:
 ./daemon/daemon
 
 ```
+
+Deci asa 3 chestii:
+- daemon = server care ruleaza tot timpul
+- libtlm = api ca sa interactionezi cu serverul, deci un fel de client sa zic asa
+- application = aplicatii care linkeaza libtlm si fac chestii cu ele
+
+Si in application pub1.c, pub2.c, sub1.c, etc astia sunt clienti practic.
+
+Si ce trebuie sa faci este sa te uiti cum dau publish/ subscribe in pub1.c sub1.c si asa si sa
+bagi asta in gui. Deocamdata in gui e gol nu e inclusa libraria. 
+
+Ca sa rulezi folosesti makefilurile alea. Dai cd in folderul respectiv si dai make acolo si dupa rulezi.
+
+Cand linkezi libtlm in gui tre sa modifici si in makefile. Mai vezi si la celelalte makefile uri cum am facut. Practic 
+o sa iti mai modifici makefile-ul.
+
+Sa ai gui/sub.c, gui/pub.c astea sa fie gui-uri diferite sau ceva.
