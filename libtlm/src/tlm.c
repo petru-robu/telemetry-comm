@@ -175,7 +175,7 @@ void tlm_close(tlm_t handle)
     handle->rx_running = 0;
     if (handle->callback)
         pthread_join(handle->rx_thread, NULL);
-
+    printf("afisare");
     close(handle->sock);
     free(handle);
 }

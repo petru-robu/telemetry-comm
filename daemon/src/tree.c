@@ -97,6 +97,31 @@ ChannelNode *get_or_create_channel(const char *path)
     return current;
 }
 
+/* Debug: Print tree recursively */
+void print_tree_recursive(ChannelNode *node, int depth)
+{
+    if (!node) return;
+
+    for (int i = 0; i < depth; i++) printf("  ");
+    printf("- %s (Subs: ", node->name);
+    for (int i = 0; i < node->sub_count; i++)
+        printf("%d ", node->subscribers[i]);
+    printf(")\n");
+
+    for (int i = 0; i < node->child_count; i++)
+        print_tree_recursive(node->children[i], depth + 1);
+}
+
+void print_tree(void)
+{
+    if (root)
+    {
+        printf("--- Tree Structure ---\n");
+        print_tree_recursive(root, 0);
+        printf("----------------------\n");
+    }
+}
+
 void add_subscriber(ChannelNode *node, int fd)
 {
     if (!node || fd < 0)
@@ -111,6 +136,7 @@ void add_subscriber(ChannelNode *node, int fd)
     {
         node->subscribers[node->sub_count++] = fd;
         printf("[TREE] Socket %d subscribed to %s\n", fd, node->name);
+        print_tree(); // Print tree after adding
     }
     else
     {
@@ -145,6 +171,8 @@ void remove_subscriber(int fd)
         return;
 
     remove_from_node(root, fd);
+    printf("[TREE] Removed subscriber %d\n", fd);
+    print_tree(); // Print tree after removing
 }
 
 /* Recursively broadcast a message to all subscribers of this node and its children */

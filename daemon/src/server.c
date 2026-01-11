@@ -106,6 +106,10 @@ static void handle_client_message(int index)
     {
         /* Client disconnected */
         printf("[DAEMON] Client disconnected, fd %d\n", sd);
+        
+        /* Remove from subscription tree */
+        remove_subscriber(sd);
+        
         close(sd);
         client_sockets[index] = 0;
         return;
