@@ -8,11 +8,9 @@ Messages are organized into hierarchical distribution channels:
 - A message sent to a parent channel is received by all subscribers of that channel and its child channels. 
 - Parent channels are created automatically when a daemon registers the first subscriber on a child channel.  
 
-There are three types of participants:  
+There are two types of participants:  
 - Publisher - send messages to a channel
 - Subscriber - receive messages from channels they are subscribed to
-- Publisher/Subscriber - can send and also receive messages
-
 
 A possible set of channels at a given time could be:  
 
@@ -38,47 +36,96 @@ The projects consists of three components:
 
 Each module is compiled separately via makefiles.
 
+<img src="./res/arhitecture.png" alt="arhitecture" width="500"/>
+
 ## Daemon
-Octav docs here
+The daemon is the server part of the application. Each channel is considered being part of a tree.
+The daemon owns the channel tree and manages brodcast of messages amongst participants.
+
+The daemon is responsible of:
+- creating a UNIX socket and listening on it
+- managing connections with clients
+- handling messages from clients
+
+Clients are served sequentially.
+The daemon is compiled via a makefile.
+
 ### Channel Tree
+Each channel is considered being a node in a tree. A node in this tree contains:
+- channel's name
+- children nodes (other channels)
+- socket file descriptors of subscribers
 
-### Server API
-docs here
+<img src="./res/tree.png" alt="tree" width="400"/>
 
+## Server API (libtlm)
+The libtlm static library serves the purpose of an API. It is used by applications to:
+- subscribe a participant to a channel
+- post a message to a channel
+- register a callback for a participant
 
-# Running instructions
+### Handles
+A connection is handled via a handle structure responsible for:
+- channel information
+- client socket
+- callback mechanism
+- last message received and message count
 
-Compiling and building: 
+The library is compiled via a makefile as a static library `libtlm.a`. This library is then linked by applications.
+
+### Callback
+When a callback function is registered for a subscriber, a new thread is spawned where incoming messages are read. Then, the user callback function is called.
+
+## Application level
+For testing purposes, we provide some minimal applications to simulate multiple publishers and subscribers.
+
+To run them, do the following:
+- Compile the project:
 ```bash
-# build all modules
-make
-
-# build daemon
-make daemon 
-
-# etc
+# in project root
+make 
+```
+- Start the daemon
+```bash
+cd daemon
+./daemon
 ```
 
-Running:
+- Start subscribers and publishers
 ```bash
-# run demon
-./daemon/daemon
+cd application
 
+# start subscribers
+./bin/sub1
+./bin/sub2
+./bin/sub3
+
+# start publishers
+./bin/pub1
+./bin/pub2
+```
+## GUI
+For interactivity, we decided to build a GUI for the application. The GUI is built with GTK.
+
+The GUI allows creating subscribers and publishers on different channels and then panes in which you can do specific operations.
+
+To run it:
+- Compile the project:
+```bash
+# in project root
+make 
+```
+- Start the daemon
+```bash
+cd daemon
+./daemon
+```
+- Start the GUI
+```bash
+cd gui
+./gui
 ```
 
-Deci asa 3 chestii:
-- daemon = server care ruleaza tot timpul
-- libtlm = api ca sa interactionezi cu serverul, deci un fel de client sa zic asa
-- application = aplicatii care linkeaza libtlm si fac chestii cu ele
-
-Si in application pub1.c, pub2.c, sub1.c, etc astia sunt clienti practic.
-
-Si ce trebuie sa faci este sa te uiti cum dau publish/ subscribe in pub1.c sub1.c si asa si sa
-bagi asta in gui. Deocamdata in gui e gol nu e inclusa libraria. 
-
-Ca sa rulezi folosesti makefilurile alea. Dai cd in folderul respectiv si dai make acolo si dupa rulezi.
-
-Cand linkezi libtlm in gui tre sa modifici si in makefile. Mai vezi si la celelalte makefile uri cum am facut. Practic 
-o sa iti mai modifici makefile-ul.
-
-Sa ai gui/sub.c, gui/pub.c astea sa fie gui-uri diferite sau ceva.
+## References
+- Sockets man page: https://man7.org/linux/man-pages/man7/unix.7.html
+- GTK: https://www.gtk.org/

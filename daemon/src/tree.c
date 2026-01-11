@@ -136,7 +136,7 @@ void add_subscriber(ChannelNode *node, int fd)
     {
         node->subscribers[node->sub_count++] = fd;
         printf("[TREE] Socket %d subscribed to %s\n", fd, node->name);
-        print_tree(); // Print tree after adding
+        // print_tree(); // Print tree after adding
     }
     else
     {
@@ -172,7 +172,7 @@ void remove_subscriber(int fd)
 
     remove_from_node(root, fd);
     printf("[TREE] Removed subscriber %d\n", fd);
-    print_tree(); // Print tree after removing
+    // print_tree(); // Print tree after removing
 }
 
 /* Recursively broadcast a message to all subscribers of this node and its children */

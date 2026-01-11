@@ -9,6 +9,8 @@ out/
 # Targets
 daemon/daemon
 application/bin/*
+gui/gui
 
 # Static libs 
 *.a
+

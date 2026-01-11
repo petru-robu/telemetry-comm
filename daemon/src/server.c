@@ -177,7 +177,7 @@ void server_run(void)
                 max_fd = sd;
         }
 
-        /* Wait for activity on any socket */
+        // Wait indefinitely for data to be available
         int activity = select(max_fd + 1, &readfds, NULL, NULL, NULL);
         if (activity < 0 && errno != EINTR)
         {

@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "../../libtlm/inc/tlm.h"
 
-void on_message(tlm_t t, const char *msg)
+void on_message(tlm_t handle, const char *msg)
 {
+    if(!handle)
+        return;
+    
     printf("[C] Received: %s\n", msg);
 }
 
